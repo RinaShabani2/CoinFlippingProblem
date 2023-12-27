@@ -1,0 +1,40 @@
+def flipCoinsDP(faceUp, faceDown, goal):
+    all_coins = faceUp + faceDown
+    max_possible_sum = sum(faceUp) + sum(faceDown)
+    dp = [float('inf')] * (max_possible_sum + 1)
+    dp[0] = 0  
+
+    for coin in all_coins:
+        for j in range(coin, max_possible_sum + 1):
+            dp[j] = min(dp[j], dp[j - coin] + 1)
+
+    if goal > max_possible_sum:
+        return [-123456789]
+
+    if sum(faceUp)==goal:
+        return {}
+
+    if dp[goal] == float('inf'):
+        return [-123456789]
+    else:
+        flips = []
+        remaining_sum = goal
+        for coin in reversed(faceUp):
+            if remaining_sum - coin >= 0 and dp[remaining_sum] == dp[remaining_sum - coin ] + 1:
+
+                remaining_sum -= coin
+            else:
+                flips.append(coin*(-1))                
+        for coin in reversed(faceDown):
+            if remaining_sum - coin >= 0 and dp[remaining_sum] == dp[remaining_sum - coin] + 1:
+                flips.append(coin)
+
+                remaining_sum -= coin
+
+        flips.sort()
+        return flips
+
+
+print(flipCoinsDP([2, 2, 5], [1, 10], 9))  
+print(flipCoinsDP([2, 2, 5], [1, 10], 14))  
+print(flipCoinsDP([1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], 10))
