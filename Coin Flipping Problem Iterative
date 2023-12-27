@@ -1,0 +1,28 @@
+def flipCoinsIterative(faceUp, faceDown, goal):
+    if sum(faceUp) == goal:
+        return []  
+    if sum(faceUp) + sum(faceDown) < goal:
+        return [-123456789] 
+
+    all_coins = faceDown + [-x for x in faceUp]
+
+    best_flips = None
+    min_flips = float('inf') 
+
+    for mask in range(1, 1 << len(all_coins)):
+        flips = []
+        new_sum = sum(faceUp)  
+        for i in range(len(all_coins)):
+            if mask & (1 << i):  
+                flips.append(all_coins[i])
+                new_sum += all_coins[i]  
+
+        if new_sum == goal and len(flips) < min_flips:
+            best_flips = flips
+            min_flips = len(flips)
+
+    return sorted(best_flips, key=abs) if best_flips else [-123456789]
+
+print(flipCoinsIterative([2, 2, 5], [1, 10], 9))  
+print(flipCoinsIterative([2, 2, 5], [1, 10], 14))  
+print(flipCoinsIterative([1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], 10))
